@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css?family=Abel");
+
+.App {
+  text-align: center;
+  font-family: 'Abel';
+  background: #6D7993;
+  padding-bottom: 10vh;
+}
+
+.App-header {
+  background-color: #222;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.graph-inputs{
+  display: flex;
+  margin: 2em 0em 0 1.35em;
+}
+
+.popup{
+  width: 8.5vw;
+  background: black;
+  padding: 1em 1em 1.5em;
+  border-radius: 1em;
+}
+
+.popup h1{
+  font-size: 1.4em
+}
+
+.popup h2{
+  font-size: 1.2em
+}
+
+.inputs{
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  box-shadow: 0pt 0 0pt 1.5pt black;
+  padding: .4em 1em;
+  border-radius: .4em;
+  background: #c2c4c6;
+  width: 16.5vw;
+}
+
+.add-stock{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 12vh;
+}
+
+.add-stock input{
+  text-align: center;
+  width: 16vw;
+}
+
+.time-select{
+  align-content: center;
+  text-align: center;
+}
+
+.graph{
+  box-shadow: 0pt 0 0pt 1.5pt black;
+  padding: .4em;
+  border-radius: .4em;
+  background: #c2c4c6;
+}
+
+.symbol-display{
+  text-align: left;
+  background: gray;
+  padding: 0 5px 15px;
+  border-radius: 10px;
+  width: 16vw;
+  margin-top: 10px;
+  line-height: .5;
+}
+
+.symbol-display h2{
+  font-size: 1.5em
+}
