@@ -7,34 +7,35 @@ import "../node_modules/react-vis/dist/style.css";
 
 let symbols = []
 
+//'Monthly Time Series'
+// Time Series (Daily)
+
 class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      isChecked: false,
       stockInfo: [],
       time_series: 'TIME_SERIES_DAILY',
       stockDates: [],
       symbol: 'MSFT',
-      todayInterval: '30min',
+      todayInterval: '5min',
       allStocks: [],
       sortedStocks: [0, 0],
       highest: []
     }
     this.changeTime = this.changeTime.bind(this)
     this.addStock = this.addStock.bind(this)
+    this.fetchTodayInfo = this.fetchTodayInfo.bind(this)
     this.parseTime = this.parseTime.bind(this)
     this.fetchStockInfo = this.fetchStockInfo.bind(this)
     this.addDates = this.addDates.bind(this)
-    this.checkClick = this.checkClick.bind(this)
   }
-
-      checkClick() {
-      this.setState({ isChecked: !this.state.isChecked });
-    }
   
 
   changeTime(event){
+    this.setState({allStocks: []})
+    this.setState({sortedStocks: [0, 0]})
+    symbols = []
     this.setState({time_series: event.target.value})
   }
 
@@ -59,11 +60,16 @@ class App extends Component {
   }
 
   addStock(info){
-    console.log('ADD STOCK', info)
+    // console.log('stock dates', this.state.stockDates)
+    // console.log('stock info', this.state.stockInfo)
     let stocks = this.state.stockInfo
     let allStocks = []
+    let stockDates = []
     stocks.push(info)
     this.setState({stockInfo: stocks}) //successfully adds another stock to state
+    this.state.stockInfo.forEach((stock)=>stockDates.push(Object.keys(stock)))
+    stockDates.sort((a, b)=>b.length-a.length)
+    console.log('STOCK INFO', stockDates)
     this.setState({stockDates: Object.keys(this.state.stockInfo[0])})
     this.state.stockInfo.forEach(selectedStock => 
     allStocks.push(this.addDates(selectedStock))
@@ -90,6 +96,16 @@ class App extends Component {
 
   addDates(stock){
     let withDates = this.state.stockDates.map((date, ind) => {
+      if(stock[date] == undefined){
+        return {
+          x: new Date(date), 
+          open: 0, 
+          high: 0, 
+          low: 0, 
+          y: 0, 
+          volume: 0
+        }
+      } else{
       return {
           x: new Date(date), 
           open: stock[date]['1. open'], 
@@ -98,27 +114,51 @@ class App extends Component {
           y: stock[date]['4. close'], 
           volume: stock[date]['5. volume']
       }
+    }
     })
     return withDates
   }
 
   fetchStockInfo(){
+    console.log('HERE TEST', this.state.time_series)
+    // if(this.state.time_series === 'TIME_SERIES_INTRADAY'){
+      // return axios.get(
+      //   `https://www.alphavantage.co/query?function=${this.state.time_series}&symbol=${this.state.symbol}&interval=${this.state.todayInterval}&apikey=DFRIUZR4TEQX0I5B`
+      // )
+    // }
     return  axios.get(
       `https://www.alphavantage.co/query?function=${this.state.time_series}&symbol=${this.state.symbol}&apikey=DFRIUZR4TEQX0I5B`,
     )
     .then(res => {
+      console.log('BLARGH', res.data)
       symbols.push(this.state.symbol)
       res.data
-      this.addStock(res.data[this.parseTime()])
+      //console.log(this.parseTime())
+      //this.addStock(res.data[this.parseTime()])
+      this.addStock(res.data['Monthly Time Series'])
     })
     .catch(err => console.error("Fetching stock data failed", err))
   }
   
+  fetchTodayInfo(){
+    console.log('HERE TEST', this.state.time_series)
+    return axios.get(
+      `https://www.alphavantage.co/query?function=${this.state.time_series}&symbol=${this.state.symbol}&interval=${this.state.todayInterval}&apikey=DFRIUZR4TEQX0I5B`
+    )
+    .then(res => {
+      console.log('NEW BLARGH', res.data)
+      symbols.push(this.state.symbol)
+      res.data
+      //console.log(this.parseTime())
+      //this.addStock(res.data[this.parseTime()])
+      this.addStock(res.data['Time Series (5min)'])
+    })
+  }
+
 sortValues(){
   let highest = []
-  let lowest = []
   this.state.allStocks.forEach(stock=>{
-    if(stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y > highest){
+    if(stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y > highest ){
       highest.push(stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y)
     }
   })
@@ -127,7 +167,7 @@ sortValues(){
 }
 
   componentDidMount(){
-    this.fetchStockInfo()
+    //this.fetchStockInfo()
   }
 
   render() {
@@ -176,7 +216,12 @@ sortValues(){
           required
           placeholder = 'Company Symbol'>
           </input>
-          <button onClick={this.fetchStockInfo}>Add Stock</button>
+          {
+            this.state.time_series == 'TIME_SERIES_INTRADAY' ? 
+            <button onClick={this.fetchTodayInfo}>Add Stock</button> :
+            <button onClick={this.fetchStockInfo}>Add Stock</button>
+          }
+          {/* <button onClick={this.fetchStockInfo}>Add Stock</button> */}
           </div>
         </div>
         </div>

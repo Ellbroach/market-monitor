@@ -44,7 +44,6 @@ export default class Graph extends React.Component {
     const Line = useCanvas ? LineSeries : LineSeriesCanvas;
     let low = 0;
     let high = Number(this.props.sorted[1][0]) + Number(this.props.sorted[1][0] * .4)
-    console.log('WIDTH', window.innerWidth)
     return (
       <div className='graph'>
         {this.props.allStocks[0] ?
