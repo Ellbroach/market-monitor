@@ -9,6 +9,7 @@ let symbols = []
 
 //'Monthly Time Series'
 // Time Series (Daily)
+// Weekly Time Series
 
 class App extends Component {
   constructor(props){
@@ -16,6 +17,7 @@ class App extends Component {
     this.state = {
       stockInfo: [],
       time_series: 'TIME_SERIES_DAILY',
+      parse_time_series: '',
       stockDates: [],
       symbol: 'MSFT',
       todayInterval: '5min',
@@ -29,6 +31,7 @@ class App extends Component {
     this.parseTime = this.parseTime.bind(this)
     this.fetchStockInfo = this.fetchStockInfo.bind(this)
     this.addDates = this.addDates.bind(this)
+    this.parseTimeSeries = this.parseTimeSeries.bind(this)
   }
   
 
@@ -39,17 +42,29 @@ class App extends Component {
     this.setState({time_series: event.target.value})
   }
 
+  parseTimeSeries(){
+    if(this.state.time_series == 'TIME_SERIES_DAILY'){
+       return 'Time Series (Daily)'
+    }
+    else if(this.state.time_series == 'TIME_SERIES_WEEKLY'){
+     return 'Weekly Time Series'
+    }
+    else if(this.state.time_series == 'TIME_SERIES_MONTHLY'){
+      return 'Monthly Time Series'
+    }
+  }
+
   displayTime(){
     if(this.state.time_series === 'TIME_SERIES_DAILY'){
-      return 'Over The Last 5 Months'
+      return 'Every Market Day'
     } else if(this.state.time_series === 'TIME_SERIES_INTRADAY'){
-      return 'Today'
+      return 'Every 5 Minutes'
     }
     else if(this.state.time_series === 'TIME_SERIES_WEEKLY'){
-      return 'Over The Last Two Years'
+      return 'Every End of the Week'
     }
     else{
-      return 'Over The Last 6 Years'
+      return 'Every End of the Month'
     }
   }
 
@@ -135,7 +150,7 @@ class App extends Component {
       res.data
       //console.log(this.parseTime())
       //this.addStock(res.data[this.parseTime()])
-      this.addStock(res.data['Monthly Time Series'])
+      this.addStock(res.data[this.parseTimeSeries()])
     })
     .catch(err => console.error("Fetching stock data failed", err))
   }
@@ -157,18 +172,15 @@ class App extends Component {
 
 sortValues(){
   let highest = []
-  this.state.allStocks.forEach(stock=>{
-    if(stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y > highest ){
-      highest.push(stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y)
+  this.state.allStocks.forEach((stock, index)=>{
+    highest[index] = 0
+    if(stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y > highest[index] ){
+      highest[index] = (stock.slice().sort((a, b) => a.y-b.y)[stock.length-1].y)
     }
   })
   this.setState({highest: highest})
   this.setState({sortedStocks: [0, highest.slice().sort((a,b)=>b-a)]})
 }
-
-  componentDidMount(){
-    //this.fetchStockInfo()
-  }
 
   render() {
     return (
@@ -201,7 +213,7 @@ sortValues(){
             <div className='symbol-display'>
               <h2>{symbol}</h2>
               <h3>Peak: ${this.state.highest[index]}</h3>
-              {this.displayTime()}
+              <h3>{this.displayTime()}</h3>
               <button onClick={() =>this.removeStock(index)}>Remove Stock</button>
             </div>
             )
@@ -221,7 +233,6 @@ sortValues(){
             <button onClick={this.fetchTodayInfo}>Add Stock</button> :
             <button onClick={this.fetchStockInfo}>Add Stock</button>
           }
-          {/* <button onClick={this.fetchStockInfo}>Add Stock</button> */}
           </div>
         </div>
         </div>
