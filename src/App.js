@@ -211,7 +211,7 @@ sortValues(){
           {
             symbols.map((symbol, index)=>
             <div className='symbol-display'>
-              <h2>{symbol}</h2>
+              <h2>{symbol.toUpperCase()}</h2>
               <h3>Peak: ${this.state.highest[index]}</h3>
               <h3>{this.displayTime()}</h3>
               <button onClick={() =>this.removeStock(index)}>Remove Stock</button>
@@ -223,15 +223,18 @@ sortValues(){
           onChange = {event => this.setState({
             symbol: event.target.value
           })}
+          type='text'
           name="Company-input" 
           id="search-field"
           required
-          placeholder = 'Company Symbol'>
+          placeholder = 'Company Symbol'
+          // onFocus = "this.placeholder = ''"
+          >
           </input>
           {
             this.state.time_series == 'TIME_SERIES_INTRADAY' ? 
-            <button onClick={this.fetchTodayInfo}>Add Stock</button> :
-            <button onClick={this.fetchStockInfo}>Add Stock</button>
+            <button className='effect effect-5' onClick={this.fetchTodayInfo}>Add Stock</button> :
+            <button className='effect effect-5' onClick={this.fetchStockInfo}>Add Stock</button>
           }
           </div>
         </div>

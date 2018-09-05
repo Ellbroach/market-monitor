@@ -1,106 +1,129 @@
 @import url("https://fonts.googleapis.com/css?family=Abel");
+
+
 .App {
   text-align: center;
   font-family: 'Abel';
+  // background: #6D7993;
   background: #7395AE;
-  min-height: 100vh; }
+  min-height: 100vh;
+}
 
 .App-header {
   background-color: #222;
   padding: 20px;
-  color: white; }
+  color: white;
+}
 
 .App-title {
-  font-size: 1.5em; }
+  font-size: 1.5em;
+}
 
 .App-intro {
-  font-size: large; }
+  font-size: large;
+}
 
-.graph-inputs {
+.graph-inputs{
   display: flex;
-  margin: 2em 0em 0 1.35em; }
+  margin: 2em 0em 0 1.35em;
+}
 
-.popup {
+.popup{
   width: 8.5vw;
   background: black;
   padding: 1em 1em 1.5em;
-  border-radius: 1em; }
+  border-radius: 1em;
+}
 
-.popup h1 {
-  font-size: 1.4em; }
+.popup h1{
+  font-size: 1.4em
+}
 
-.popup h2 {
-  font-size: 1.2em; }
+.popup h2{
+  font-size: 1.2em
+}
 
-.inputs {
+.inputs{
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   box-shadow: 0pt 0 0pt 1.5pt black;
   padding: .4em 1em;
-  border-radius: .15em;
+  border-radius: .4em;
   background: #c2c4c6;
-  width: 16.5vw; }
+  width: 16.5vw;
+}
 
-.add-stock {
+.add-stock{
   display: flex;
   flex-direction: column;
   padding-top: 5vh;
   /* position: absolute;
-  bottom: 12vh; */ }
+  bottom: 12vh; */
+}
 
 input {
   border: none;
   outline: none;
   background: none;
-  font-family: 'Open Sans', Helvetica, Arial, sans-serif; }
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
 
-.add-stock input {
+.add-stock input{
   display: block;
-  width: 8vw;
-  margin-top: 5px;
-  padding-bottom: 3px;
-  font-size: .75em;
-  font: black;
-  border-bottom: 1px solid black;
-  text-align: center;
-  color: black; }
+    width: 16vw;
+    margin-top: 5px;
+    padding-bottom: 3px;
+    font-size: 1em;
+    font: black;
+    border-bottom: 1px solid black;
+    text-align: center;
+    color: black;
+}
 
-.add-stock input:focus::-webkit-input-placeholder {
-  color: transparent; }
+.add-stock input:focus::-webkit-input-placeholder { color:transparent; } 
 
 /* input:focus::-webkit-input-placeholder { color:transparent; } */
-.add-stock button {
+
+.add-stock button{
   margin-top: 10px;
   background: #557A95;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
-.time-select {
+.time-select{
   align-content: center;
-  text-align: center; }
+  text-align: center;
+}
 
-.graph {
+.graph{
   box-shadow: 0pt 0 0pt 1.5pt black;
   padding: .4em;
-  border-radius: .15em;
-  background: #c2c4c6; }
+  border-radius: .4em;
+  background: #c2c4c6;
+}
 
-.symbol-display {
+.symbol-display{
   text-align: left;
   background: gray;
   padding: 0 5px 15px;
-  border-radius: 3px;
+  border-radius: 10px;
   width: 16vw;
   margin-top: 10px;
-  line-height: .3; }
+  line-height: .3;
+}
 
-.symbol-display h2 {
-  font-size: 1.2em; }
+.symbol-display h2{
+  font-size: 1.2em
+}
 
-.symbol-display h3 {
-  font-size: 1em; }
+.symbol-display h3{
+  font-size: 1em
+}
+
 
 /* ADD BUTTON */
+
 .effect {
   text-align: center;
   display: inline-block;
@@ -108,15 +131,21 @@ input {
   text-decoration: none;
   color: #fff;
   text-transform: capitalize;
-  font-size: 14px;
+  font: {
+    // family: 'Roboto', sans-serif; 
+    size: 14px;
+  }
   padding: 20px 0px;
   width: 8em;
   border-radius: 5px;
-  overflow: hidden; }
+  overflow: hidden;
+}
+
 
 .effect.effect-5 {
-  transition: all 0.2s linear 0s; }
-  .effect.effect-5:before {
+  transition: all 0.2s linear 0s;
+  
+  &:before {
     content: ' \003E';
     font-size: 1.5em;
     position: absolute;
@@ -128,13 +157,19 @@ input {
     justify-content: center;
     height: 100%;
     width: 1.25em;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(#fff,0.3);
     border-radius: 0 50% 50% 0;
-    transform: scale(0, 1);
+    transform: scale(0,1);
     transform-origin: left center;
-    transition: all 0.2s linear 0s; }
-  .effect.effect-5:hover {
-    text-indent: 30px; }
-    .effect.effect-5:hover:before {
-      transform: scale(1, 1);
-      text-indent: 0; }
+    transition: all 0.2s linear 0s;
+  }
+  
+   &:hover {
+    text-indent: 30px;
+    
+    &:before {
+      transform: scale(1,1);
+      text-indent: 0;
+    }
+  }
+}
