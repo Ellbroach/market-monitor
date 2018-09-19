@@ -3,13 +3,10 @@ import axios from 'axios'
 import Graph from './Graph';
 import './App.css';
 import "../node_modules/react-vis/dist/style.css";
+import Minus from './Minus.svg';
 
 
 let symbols = []
-
-//'Monthly Time Series'
-// Time Series (Daily)
-// Weekly Time Series
 
 class App extends Component {
   constructor(props){
@@ -28,7 +25,6 @@ class App extends Component {
     this.changeTime = this.changeTime.bind(this)
     this.addStock = this.addStock.bind(this)
     this.fetchTodayInfo = this.fetchTodayInfo.bind(this)
-    this.parseTime = this.parseTime.bind(this)
     this.fetchStockInfo = this.fetchStockInfo.bind(this)
     this.addDates = this.addDates.bind(this)
     this.parseTimeSeries = this.parseTimeSeries.bind(this)
@@ -36,10 +32,19 @@ class App extends Component {
   
 
   changeTime(event){
-    this.setState({allStocks: []})
-    this.setState({sortedStocks: [0, 0]})
+    this.refs.formInput.value = ''
+    this.setState({
+        stockInfo: [],
+        time_series: event.target.value,
+        parse_time_series: '',
+        stockDates: [],
+        symbol: '',
+        todayInterval: '5min',
+        allStocks: [],
+        sortedStocks: [0, 0],
+        highest: []
+    })
     symbols = []
-    this.setState({time_series: event.target.value})
   }
 
   parseTimeSeries(){
@@ -68,15 +73,7 @@ class App extends Component {
     }
   }
 
-  parseTime(){
-    let splitWords = this.state.time_series.split('_').map(word => word[0] + word.slice(1).toLowerCase())
-    let timePeriod = '(' + splitWords[splitWords.length-1] + ')'
-    return splitWords.slice(0, splitWords.length-1).join(' ') + " " + timePeriod
-  }
-
   addStock(info){
-    // console.log('stock dates', this.state.stockDates)
-    // console.log('stock info', this.state.stockInfo)
     let stocks = this.state.stockInfo
     let allStocks = []
     let stockDates = []
@@ -84,7 +81,6 @@ class App extends Component {
     this.setState({stockInfo: stocks}) //successfully adds another stock to state
     this.state.stockInfo.forEach((stock)=>stockDates.push(Object.keys(stock)))
     stockDates.sort((a, b)=>b.length-a.length)
-    console.log('STOCK INFO', stockDates)
     this.setState({stockDates: Object.keys(this.state.stockInfo[0])})
     this.state.stockInfo.forEach(selectedStock => 
     allStocks.push(this.addDates(selectedStock))
@@ -96,15 +92,17 @@ class App extends Component {
   removeStock(index){
     if(symbols.length == 1 && this.state.allStocks.length === 1){
       symbols = []
-      this.setState({allStocks: []})
+      this.setState({allStocks: [],
+        stockInfo: [],
+        highest: [],
+        sortedStocks: [0, 0]
+      })
     }
     else{
     symbols.splice(index, 1)
-    let someTest = this.state.allStocks.slice()
-    someTest.splice(index, 1)
-    this.setState({allStocks: someTest})
-    let nextTest = this.state.stockInfo.slice().splice(index, 1)
-    this.setState({stockInfo: nextTest})
+    this.state.allStocks.splice(index, 1)
+    this.state.stockInfo.splice(index, 1)
+    this.state.highest.splice(index, 1)
     this.sortValues()
     }
   }
@@ -135,39 +133,30 @@ class App extends Component {
   }
 
   fetchStockInfo(){
-    console.log('HERE TEST', this.state.time_series)
-    // if(this.state.time_series === 'TIME_SERIES_INTRADAY'){
-      // return axios.get(
-      //   `https://www.alphavantage.co/query?function=${this.state.time_series}&symbol=${this.state.symbol}&interval=${this.state.todayInterval}&apikey=DFRIUZR4TEQX0I5B`
-      // )
-    // }
     return  axios.get(
       `https://www.alphavantage.co/query?function=${this.state.time_series}&symbol=${this.state.symbol}&apikey=DFRIUZR4TEQX0I5B`,
     )
     .then(res => {
-      console.log('BLARGH', res.data)
+      this.refs.formInput.value = ''
       symbols.push(this.state.symbol)
       res.data
-      //console.log(this.parseTime())
-      //this.addStock(res.data[this.parseTime()])
       this.addStock(res.data[this.parseTimeSeries()])
     })
     .catch(err => console.error("Fetching stock data failed", err))
   }
   
   fetchTodayInfo(){
-    console.log('HERE TEST', this.state.time_series)
     return axios.get(
       `https://www.alphavantage.co/query?function=${this.state.time_series}&symbol=${this.state.symbol}&interval=${this.state.todayInterval}&apikey=DFRIUZR4TEQX0I5B`
     )
     .then(res => {
-      console.log('NEW BLARGH', res.data)
       symbols.push(this.state.symbol)
       res.data
-      //console.log(this.parseTime())
-      //this.addStock(res.data[this.parseTime()])
       this.addStock(res.data['Time Series (5min)'])
     })
+  }
+  componentDidMount(){
+    this.fetchStockInfo()
   }
 
 sortValues(){
@@ -186,7 +175,7 @@ sortValues(){
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to the Market Monitor</h1>
+          <h1 className="App-title">Market Monitor</h1>
         </header>
         <div className='graph-inputs'>
         {
@@ -194,11 +183,13 @@ sortValues(){
         <Graph 
         allStocks={this.state.allStocks}
         sorted={this.state.sortedStocks}
-        symbols={symbols}/>
+        symbols={symbols}
+        />
         : null
         }
         <div className='inputs'>
         <div className='time-select'>
+        <h2>Interval: {this.displayTime()}</h2>
         <h3>Select a time frame</h3>
           <select
           onChange={this.changeTime}>
@@ -211,15 +202,20 @@ sortValues(){
           {
             symbols.map((symbol, index)=>
             <div className='symbol-display'>
+                <div className='stock-info'>
               <h2>{symbol.toUpperCase()}</h2>
               <h3>Peak: ${this.state.highest[index]}</h3>
-              <h3>{this.displayTime()}</h3>
-              <button onClick={() =>this.removeStock(index)}>Remove Stock</button>
+              <button 
+                onClick={() =>this.removeStock(index)}>
+                {/* <img className='delete-button' src={Minus}/> */}
+                Remove Stock</button>
+              </div>
             </div>
             )
           }
           <div className='add-stock'>
           <input
+          ref='formInput'
           onChange = {event => this.setState({
             symbol: event.target.value
           })}

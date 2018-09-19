@@ -37,16 +37,17 @@ export default class Graph extends React.Component {
     )
   }
   render() {
-    this.props.allStocks[0] ? console.log('PROPS', this.props) : null
-    this.props.allStocks[1] ? console.log('PROPS 2', this.props.allStocks[1][0].symbol) : null
+    this.props.allStocks[0] ? console.log('PROPS', this.props) : console.log('NULL!!!!')
+    //this.props.allStocks[1] ? console.log('PROPS 2', this.props.allStocks[1][0].symbol) : null
     const { useCanvas } = this.state;
     const content = useCanvas ? 'TOGGLE TO SVG' : 'TOGGLE TO CANVAS';
     const Line = useCanvas ? LineSeries : LineSeriesCanvas;
     let low = 0;
     let high = Number(this.props.sorted[1][0]) + Number(this.props.sorted[1][0] * .4)
     return (
-      <div className='graph'>
+      <div>
         {this.props.allStocks[0] ?
+        <div className='graph'>
           <FlexibleWidthXYPlot
           style={{ backgroundColor: '#c2c4c6' }}
             xType="time"
@@ -54,6 +55,7 @@ export default class Graph extends React.Component {
             width={window.innerWidth*.75}
             yDomain={[low, high]}
           >
+          
             <HorizontalGridLines />
             <VerticalGridLines />
             <XAxis title="Date" tickTotal={12} />
@@ -89,7 +91,13 @@ export default class Graph extends React.Component {
                   (elem, ind) =>
                     elem === undefined ? (
                       <p key={ind}>No data</p>
-                    ) : (
+                    )
+                    
+                    
+                    
+                    : 
+                    
+                    (
                         <p key={ind}>
                           {this.props.allStocks[ind] === undefined
                             ? "No data"
@@ -103,8 +111,10 @@ export default class Graph extends React.Component {
                 )}
               </div>
             </Crosshair>
-          </FlexibleWidthXYPlot> : null
+          </FlexibleWidthXYPlot> </div>
+           : null
         }
+      
       </div>
     );
   }

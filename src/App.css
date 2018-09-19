@@ -7,11 +7,13 @@
 
 .App-header {
   background-color: #222;
-  padding: 20px;
+  padding: 5px;
   color: white; }
 
 .App-title {
-  font-size: 1.5em; }
+  font-size: 2.5em;
+  text-align: left;
+  margin-left: 20px; }
 
 .App-intro {
   font-size: large; }
@@ -19,6 +21,12 @@
 .graph-inputs {
   display: flex;
   margin: 2em 0em 0 1.35em; }
+
+button:focus {
+  outline: 0; }
+
+select:focus {
+  outline: 0; }
 
 .popup {
   width: 8.5vw;
@@ -38,16 +46,13 @@
   margin: 0 auto;
   box-shadow: 0pt 0 0pt 1.5pt black;
   padding: .4em 1em;
-  border-radius: .15em;
+  border-radius: .4em;
   background: #c2c4c6;
-  width: 16.5vw; }
+  width: 17vw; }
 
 .add-stock {
   display: flex;
-  flex-direction: column;
-  padding-top: 5vh;
-  /* position: absolute;
-  bottom: 12vh; */ }
+  padding-top: 3.5vh; }
 
 input {
   border: none;
@@ -57,10 +62,11 @@ input {
 
 .add-stock input {
   display: block;
+  height: 20px;
   width: 8vw;
-  margin-top: 5px;
+  margin-top: 7.5px;
   padding-bottom: 3px;
-  font-size: .75em;
+  font-size: .85em;
   font: black;
   border-bottom: 1px solid black;
   text-align: center;
@@ -71,34 +77,61 @@ input {
 
 /* input:focus::-webkit-input-placeholder { color:transparent; } */
 .add-stock button {
-  margin-top: 10px;
   background: #557A95;
-  cursor: pointer; }
+  cursor: pointer;
+  height: 15px;
+  margin-left: 8px; }
 
 .time-select {
   align-content: center;
   text-align: center; }
 
+.time-select h2 {
+  margin: 5px 0;
+  font-size: 24px; }
+
+.time-select h3 {
+  margin: 6px 0;
+  font-size: 18px; }
+
 .graph {
   box-shadow: 0pt 0 0pt 1.5pt black;
   padding: .4em;
-  border-radius: .15em;
+  border-radius: .4em;
   background: #c2c4c6; }
 
 .symbol-display {
   text-align: left;
   background: gray;
-  padding: 0 5px 15px;
+  padding: 0 5px 8px;
   border-radius: 3px;
   width: 16vw;
   margin-top: 10px;
   line-height: .3; }
 
+.symbol-display button {
+  margin-left: 1vw;
+  background: #222;
+  width: 14vw;
+  padding: 4px 2px;
+  border-radius: 3px;
+  color: white;
+  border: #222;
+  cursor: pointer;
+  font-size: 12px; }
+
+.symbol-display button:hover {
+  background: maroon;
+  transition: .7s; }
+
 .symbol-display h2 {
-  font-size: 1.2em; }
+  font-size: 1.2em;
+  margin-left: 20px; }
 
 .symbol-display h3 {
-  font-size: 1em; }
+  font-size: 1em;
+  margin-left: 20px;
+  margin-bottom: 12px; }
 
 /* ADD BUTTON */
 .effect {
@@ -109,8 +142,8 @@ input {
   color: #fff;
   text-transform: capitalize;
   font-size: 14px;
-  padding: 20px 0px;
-  width: 8em;
+  padding: 7.5px 0px 25px;
+  width: 9em;
   border-radius: 5px;
   overflow: hidden; }
 
